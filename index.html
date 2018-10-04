@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hang Man</title>
+
+</head>
+
+<body>
+    <h1>Hang Man Game!</h1>
+
+    <h2>Guesses Left:
+        <span id="guessLeft"></span>
+    </h2>
+
+    <h2>Word to Guess:
+        <span id="question"></span>
+    </h2>
+
+    <!-- <h4>Answer:
+        <span id="answer"></span>
+    </h4> -->
+</body>
+
+
+
+<script>
+
+    var guessesLeft = document.getElementById('guessLeft');
+    var remGuess = 7;
+    var toCompare = [];
+    var alreadyGuessed = [];
+    console.log(toCompare.length)
+
+
+    function wordGen() {
+        var listOfWords = ['watter', 'piie', 'ttea', 'sodda', 'juiice'];
+        var index = Math.floor(Math.random() * 5);
+        console.log(listOfWords[index]);
+        var gameWord = listOfWords[index];
+        renderMe(gameWord);
+    }
+
+
+    function renderMe(word) {
+        
+        guessesLeft.innerHTML = remGuess;
+
+        var wordArr = word.split('');
+
+        for (var i = 0; i < wordArr.length; i++) {
+            toCompare.push(wordArr[i]);
+            var newEl = document.createElement('span');
+            newEl.classList.add("guess");
+            newEl.innerHTML = ' ___  ';
+            question.append(newEl);
+        }
+    }
+
+    function guessMe() {
+        document.onkeyup = function keyMeUp(event) {
+            if(remGuess == 7){
+                remGuess--
+            }else if(remGuess == 0){
+                guessesLeft.innerHTML = remGuess--
+                console.log("Game Over!")
+                
+            }
+            
+            var answered = event.key;
+            var grabGuess = document.getElementsByClassName('guess');
+            var doesInclude = toCompare.includes(answered)
+            var ltrIndex = toCompare.indexOf(answered)
+            var guessedAlready = alreadyGuessed.includes(answered)
+
+            if (doesInclude && guessedAlready == false) {
+                    grabGuess[ltrIndex].innerHTML = answered;
+                    alreadyGuessed.push(answered)
+                    console.log('Correct')
+                    for (var i = ltrIndex + 1; i < toCompare.length; i++) {
+                        if (answered === toCompare[i]) {
+                            grabGuess[i].innerHTML = answered;
+                            console.log('Correct')
+                        } 
+                    }
+                } else if (guessedAlready == true) {
+                    console.log('Already Guessed')
+                } else if(doesInclude == false) {
+                    guessesLeft.innerHTML = remGuess--
+                    alreadyGuessed.push(answered)
+                    console.log('Guesses Left: ' + remGuess)
+                    console.log('Incorrect')
+                }
+            }
+        
+        }
+
+    wordGen()
+    guessMe()
+
+
+    
+
+    // var questions = [{ q: "words", a: 't' },
+    // { q: "coding", a: 't' },
+    // { q: "water", a: 't' },
+    // { q: " homework", a: 'f' },
+    // { q: "coffee", a: 'f' },
+    // { q: "running", a: 'f' },
+    // { q: "flashlight", a: 'f' }
+    // ];
+
+    // var words = ['pie', 'water', 'bottle', 'bootcamp'];
+
+
+    // var guessesLeft = document.getElementById('guessLeft');
+    // var wrong = document.getElementById('wrong');
+    // var question = document.getElementById('question');
+    // var index = Math.floor(Math.random() * 7);
+
+    // var wordToGuess = 'pie';
+    // var remGuess = 7;
+    // var correct = 0;
+    // var inCorrect = 0;
+
+    // function renderMe(word) {
+
+    //     guessesLeft.innerHTML = remGuess;
+    //     wrong.innerHTML = inCorrect;
+
+    //     var wordArr = word.split('');
+
+    //     var toCompare = [];
+    //     var toGuess = [];
+    //     var guessedAlready = ['p',1,2];
+
+    //     for (var i = 0; i < wordArr.length; i++) {
+    //         toCompare.push(wordArr[i]);
+    //         toGuess.push(' ___ ');
+    //         var newEl = document.createElement('span');
+    //         newEl.classList.add("guess");
+    //         newEl.innerHTML = ' ___  ';
+    //         question.append(newEl);
+    //     }
+
+    //     function guessAlready(guess) {
+    //     for (var j = 0; j < guessedAlready.length; j++) {
+    //         console.log("Key in Guess Already: " + guess)
+    //                     if(guess === guessedAlready[j]){
+    //                         console.log('You already guessed');
+    //                         return true;
+    //                     }else if(guess !== guessedAlready[j]) {
+    //                         guessedAlready.push(guess)
+    //                         correct++
+    //                         console.log('Not Guessed Already')
+    //                         return false;
+    //                     }
+    //                 }
+    // }
+
+    //     console.log(toCompare)
+    //     console.log(guessedAlready)
+
+    //     document.onkeyup = function keyMeUp(event) {
+    //         var answered = event.key;
+    //         var grabGuess = document.getElementsByClassName('guess');
+    //         var guessed = guessAlready(answered);
+    //         console.log(guessedAlready)
+    //         console.log("Returned back: " + guessed)
+    //         // for (var i = 0; i < toCompare.length; i++) {
+    //         //     if (answered === toCompare[i]) {
+    //         //                 correct++
+    //         //                 grabGuess[i].innerHTML = answered;
+    //         //                 console.log('Correct')
+    //         //     } else if(answered !== toCompare[i]) {
+    //         //         inCorrect++;
+    //         //         console.log('Incorrect')
+    //         //     }
+    //         // }
+
+    //     }
+    // }
+
+    // renderMe(wordToGuess)
+
+
+    //  for (var i = 0; i < toCompare.length; i++) {
+    //             if (answered === toCompare[i]) {
+    //                 grabGuess[i].innerHTML = answered;
+    //                 console.log('Correct')
+                    
+    //             } else if (answered !== toCompare[i]) {
+    //                 guessesLeft.innerHTML = remGuess--
+    //                 console.log('Incorrect')
+    //             }
+    //         }
+
+
+    
+</script>
+
+</html>
