@@ -32,11 +32,12 @@
     var remGuess = 7;
     var toCompare = [];
     var alreadyGuessed = [];
+    var leftOver = [];
     console.log(toCompare.length)
 
 
     function wordGen() {
-        var listOfWords = ['watter', 'piie', 'ttea', 'sodda', 'juiice'];
+        var listOfWords = ['wtatter', 'piiei', 'ttea', 'sdodda', 'jiuiice'];
         var index = Math.floor(Math.random() * 5);
         console.log(listOfWords[index]);
         var gameWord = listOfWords[index];
@@ -52,6 +53,7 @@
 
         for (var i = 0; i < wordArr.length; i++) {
             toCompare.push(wordArr[i]);
+            leftOver.push(wordArr[i]);
             var newEl = document.createElement('span');
             newEl.classList.add("guess");
             newEl.innerHTML = ' ___  ';
@@ -61,12 +63,12 @@
 
     function guessMe() {
         document.onkeyup = function keyMeUp(event) {
+            // var isAllGuessed = 
             if(remGuess == 7){
                 remGuess--
             }else if(remGuess == 0){
                 guessesLeft.innerHTML = remGuess--
-                console.log("Game Over!")
-                
+                console.log("Game Over!")   
             }
             
             var answered = event.key;
@@ -77,8 +79,10 @@
 
             if (doesInclude && guessedAlready == false) {
                     grabGuess[ltrIndex].innerHTML = answered;
+                    // leftOver.splice(ltrIndex,1,'__');
                     alreadyGuessed.push(answered)
                     console.log('Correct')
+                    console.log(leftOver)
                     for (var i = ltrIndex + 1; i < toCompare.length; i++) {
                         if (answered === toCompare[i]) {
                             grabGuess[i].innerHTML = answered;
