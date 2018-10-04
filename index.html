@@ -53,7 +53,8 @@
 
         for (var i = 0; i < wordArr.length; i++) {
             toCompare.push(wordArr[i]);
-            leftOver.push(wordArr[i]);
+            leftOver.push('__');
+
             var newEl = document.createElement('span');
             newEl.classList.add("guess");
             newEl.innerHTML = ' ___  ';
@@ -63,29 +64,41 @@
 
     function guessMe() {
         document.onkeyup = function keyMeUp(event) {
-            // var isAllGuessed = 
+            var joinToCompare = toCompare.join('');
+            var joinLeftOver = leftOver.join('');
+
+            console.log(leftOver);
+            console.log(joinToCompare);
+            console.log(joinLeftOver);
+
             if(remGuess == 7){
                 remGuess--
             }else if(remGuess == 0){
                 guessesLeft.innerHTML = remGuess--
-                console.log("Game Over!")   
+                console.log("Game Over!");   
+            }else if(joinToCompare === joinLeftOver) {
+                console.log('YOU WIN!!!!!!');
             }
             
             var answered = event.key;
             var grabGuess = document.getElementsByClassName('guess');
-            var doesInclude = toCompare.includes(answered)
-            var ltrIndex = toCompare.indexOf(answered)
-            var guessedAlready = alreadyGuessed.includes(answered)
+            var doesInclude = toCompare.includes(answered);
+            var ltrIndex = toCompare.indexOf(answered);
+            var guessedAlready = alreadyGuessed.includes(answered);
 
             if (doesInclude && guessedAlready == false) {
                     grabGuess[ltrIndex].innerHTML = answered;
-                    // leftOver.splice(ltrIndex,1,'__');
+                    leftOver.splice(ltrIndex, 1)
+                    leftOver.splice(ltrIndex,0,answered);
                     alreadyGuessed.push(answered)
                     console.log('Correct')
                     console.log(leftOver)
                     for (var i = ltrIndex + 1; i < toCompare.length; i++) {
                         if (answered === toCompare[i]) {
                             grabGuess[i].innerHTML = answered;
+                            leftOver.splice(i, 1)
+                            leftOver.splice(i,0,answered);
+                            console.log(leftOver)
                             console.log('Correct')
                         } 
                     }
