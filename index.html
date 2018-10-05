@@ -80,11 +80,13 @@
                 console.log('YOU WIN!!!!!!');
                 return  
             }
-            else if(remGuess == 7){
-                guessesLeft.innerHTML = remGuess--
-            }
-            else if(remGuess == -1){
-                guessesLeft.innerHTML = remGuess--
+            // else if(remGuess == 7){
+            //     remGuess--
+            //     guessesLeft.innerHTML = remGuess
+            // }
+            else if(remGuess == 1){
+                remGuess--
+                guessesLeft.innerHTML = remGuess
                 console.log("YOU LOSE. Game Over!");
                 return   
             }
@@ -115,7 +117,8 @@
                 } else if (guessedAlready == true) {
                     console.log('Already Guessed')
                 } else if(doesInclude == false) {
-                    guessesLeft.innerHTML = remGuess--
+                    remGuess--
+                    guessesLeft.innerHTML = remGuess
                     alreadyGuessed.push(answered)
                     console.log('Guesses Left: ' + remGuess)
                     console.log('Incorrect')
