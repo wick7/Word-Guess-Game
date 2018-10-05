@@ -29,13 +29,15 @@
 <script>
 
     var guessesLeft = document.getElementById('guessLeft');
+    var question = document.getElementById('question');
     var remGuess = 7;
     var toCompare = [];
     var alreadyGuessed = [];
     var leftOver = [];
     console.log(toCompare.length)
+    console.log("Rem Guess: " + remGuess)
 
-
+    //Generates random word and passes word to renderMe() function
     function wordGen() {
         var listOfWords = ['wtatter', 'piiei', 'ttea', 'sdodda', 'jiuiice'];
         var index = Math.floor(Math.random() * 5);
@@ -44,7 +46,8 @@
         renderMe(gameWord);
     }
 
-
+    //Creates underlines based on letter count in word. Pushes underlines to leftOver array and to page
+    //Also pushes letters in order to toCompare array
     function renderMe(word) {
         
         guessesLeft.innerHTML = remGuess;
@@ -62,22 +65,28 @@
         }
     }
 
+    //Listens for key ups, takes in value and compares to toCompare array. If wrong, guesses left is deincremented, if right the letter appears on page
+    //with at correct index point. 
     function guessMe() {
         document.onkeyup = function keyMeUp(event) {
             var joinToCompare = toCompare.join('');
             var joinLeftOver = leftOver.join('');
-
+            console.log("Rem Guess: " + remGuess)
             console.log(leftOver);
             console.log(joinToCompare);
             console.log(joinLeftOver);
 
-            if(remGuess == 7){
-                remGuess--
-            }else if(remGuess == 0){
-                guessesLeft.innerHTML = remGuess--
-                console.log("Game Over!");   
-            }else if(joinToCompare === joinLeftOver) {
+            if(joinToCompare === joinLeftOver) {
                 console.log('YOU WIN!!!!!!');
+                return  
+            }
+            else if(remGuess == 7){
+                guessesLeft.innerHTML = remGuess--
+            }
+            else if(remGuess == -1){
+                guessesLeft.innerHTML = remGuess--
+                console.log("YOU LOSE. Game Over!");
+                return   
             }
             
             var answered = event.key;
@@ -102,6 +111,7 @@
                             console.log('Correct')
                         } 
                     }
+                    
                 } else if (guessedAlready == true) {
                     console.log('Already Guessed')
                 } else if(doesInclude == false) {
