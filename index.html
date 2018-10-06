@@ -8,6 +8,34 @@
 
 </head>
 
+<style>
+
+body {
+    padding: 0;
+    margin: 0;
+    margin-left: 50px;
+}
+
+ #question {
+   
+ }
+
+ .word-label {
+    
+ }
+
+ .word-con {
+     width: 100%;
+     
+     background-color: yellow;
+ }
+
+ h3 {
+     float: left;
+ }
+
+</style>
+
 <body>
     <h1>Hang Man Game!</h1>
 
@@ -16,9 +44,19 @@
     </h2>
 
     <h2>Word to Guess:
-        <span id="question"></span>
+            <span id="question"></span>
     </h2>
 
+    <h2>Hint:
+            <span id="gameHint"></span>
+    </h2>
+
+    <div id="status"></div>
+    
+    <!-- <div class="word-con">
+        <h2 class="word-label">Word to Guess:</h2>
+        <span id="question"></span>
+    </div> -->
     <!-- <h4>Answer:
         <span id="answer"></span>
     </h4> -->
@@ -30,6 +68,7 @@
 
     var guessesLeft = document.getElementById('guessLeft');
     var question = document.getElementById('question');
+    var gameStatus = document.getElementById('status');
     var remGuess = 7;
     var toCompare = [];
     var alreadyGuessed = [];
@@ -39,17 +78,29 @@
 
     //Generates random word and passes word to renderMe() function
     function wordGen() {
-        var listOfWords = ['wtatter', 'piiei', 'ttea', 'sdodda', 'jiuiice'];
+        // var listOfWords = ['wtatter', 'piiei', 'ttea', 'sdodda', 'jiuiice'];
+        var listOfWords = [
+        {w:'giants', h:'The orange baseball team.'},
+        {w:'karl', h:'What they call San Francisco\'s fog.'},
+        {w:'pixels', h:'The millions of tiny squares that make up your screen.'},
+        {w:'zipper', h:'It goes up and down, locking you in and out.'},
+        {w:'whiskey', h:'You have it with coke.'},
+        ];
         var index = Math.floor(Math.random() * 5);
-        console.log(listOfWords[index]);
-        var gameWord = listOfWords[index];
-        renderMe(gameWord);
+        // var gameWord = listOfWords[index];
+        
+        var gameWord = listOfWords[index].w;
+        var gameHint = listOfWords[index].h;
+        // console.log(listOfWords[index].h);
+        renderMe(gameWord, gameHint);   
     }
 
     //Creates underlines based on letter count in word. Pushes underlines to leftOver array and to page
     //Also pushes letters in order to toCompare array
-    function renderMe(word) {
-        
+    function renderMe(word, hint) {
+        console.log(hint)
+        var roundHint = document.querySelector('#gameHint');
+        roundHint.innerHTML = hint;
         guessesLeft.innerHTML = remGuess;
 
         var wordArr = word.split('');
@@ -65,73 +116,111 @@
         }
     }
 
+    function winOrLose() {
+            
+            var joinToCompare = toCompare.join('');
+            var joinLeftOver = leftOver.join('');
+            
+             if (joinToCompare === joinLeftOver) {
+                var newElem = document.createElement('h1');
+                newElem.innerHTML = 'YOU WIN!!!!!!!!';
+                gameStatus.append(newElem);
+                console.log('YOU WIN!!!!!!');
+                setTimeout(function(){ location.reload(); }, 2000);
+                
+            } else if (remGuess == 0) {
+                remGuess--
+                guessesLeft.innerHTML = 0
+                var newEle = document.createElement('h1');
+                newEle.innerHTML = 'YOU LOSE. Game Over!';
+                gameStatus.append(newEle);
+                console.log("YOU LOSE. Game Over!");
+            
+                setTimeout(function(){ location.reload(); }, 2000);
+            }
+        }
+
     //Listens for key ups, takes in value and compares to toCompare array. If wrong, guesses left is deincremented, if right the letter appears on page
     //with at correct index point. 
     function guessMe() {
         document.onkeyup = function keyMeUp(event) {
-            var joinToCompare = toCompare.join('');
-            var joinLeftOver = leftOver.join('');
+            
             console.log("Rem Guess: " + remGuess)
             console.log(leftOver);
-            console.log(joinToCompare);
-            console.log(joinLeftOver);
 
-            if(joinToCompare === joinLeftOver) {
-                console.log('YOU WIN!!!!!!');
-                return  
-            }
-            // else if(remGuess == 7){
-            //     remGuess--
-            //     guessesLeft.innerHTML = remGuess
-            // }
-            else if(remGuess == 1){
-                remGuess--
-                guessesLeft.innerHTML = remGuess
-                console.log("YOU LOSE. Game Over!");
-                return   
-            }
-            
-            var answered = event.key;
+        
+            var answer = event.key;
+            var answered = answer.toLowerCase();
             var grabGuess = document.getElementsByClassName('guess');
             var doesInclude = toCompare.includes(answered);
             var ltrIndex = toCompare.indexOf(answered);
             var guessedAlready = alreadyGuessed.includes(answered);
+            console.log(answered);
 
             if (doesInclude && guessedAlready == false) {
-                    grabGuess[ltrIndex].innerHTML = answered;
+                    grabGuess[ltrIndex].innerHTML = "    " + answered;
                     leftOver.splice(ltrIndex, 1)
                     leftOver.splice(ltrIndex,0,answered);
                     alreadyGuessed.push(answered)
                     console.log('Correct')
-                    console.log(leftOver)
+                    // console.log(leftOver)
+                    winOrLose()
                     for (var i = ltrIndex + 1; i < toCompare.length; i++) {
                         if (answered === toCompare[i]) {
-                            grabGuess[i].innerHTML = answered;
+                            grabGuess[i].innerHTML = "    " + answered;
                             leftOver.splice(i, 1)
                             leftOver.splice(i,0,answered);
                             console.log(leftOver)
                             console.log('Correct')
+                            winOrLose()
                         } 
                     }
-                    
                 } else if (guessedAlready == true) {
                     console.log('Already Guessed')
+                    winOrLose()
                 } else if(doesInclude == false) {
                     remGuess--
                     guessesLeft.innerHTML = remGuess
                     alreadyGuessed.push(answered)
                     console.log('Guesses Left: ' + remGuess)
                     console.log('Incorrect')
+                    winOrLose()
                 }
             }
-        
         }
 
     wordGen()
     guessMe()
 
 
-    
+// console.log(joinToCompare);
+            // console.log(joinLeftOver);
+            // console.log('Win/Lose Fired')
+            // if (joinToCompare === joinLeftOver) {
+            //     console.log('YOU WIN!!!!!!');
+            //     return;
+            // } else if (remGuess == 0) {
+            //     remGuess--
+            //     guessesLeft.innerHTML = 0
+            //     console.log("YOU LOSE. Game Over!");
+            //     return;
+            // }
+
+    //  if (joinToCompare === joinLeftOver) {
+            //     var newElem = document.createElement('h1');
+            //     newElem.innerHTML = 'YOU WIN!!!!!!!!';
+            //     gameStatus.append(newElem);
+            //     console.log('YOU WIN!!!!!!');
+            //     return;
+            // } else if (remGuess == 0) {
+            //     remGuess--
+            //     guessesLeft.innerHTML = 0
+            //     var newEle = document.createElement('h1');
+            //     newEle.innerHTML = 'YOU LOSE. Game Over!';
+            //     gameStatus.append(newEle);
+            //     console.log("YOU LOSE. Game Over!");
+            //     return;
+            // }
 
     // var questions = [{ q: "words", a: 't' },
     // { q: "coding", a: 't' },
