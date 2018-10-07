@@ -47,6 +47,10 @@ body {
             <span id="question"></span>
     </h2>
 
+    <h2>Already Guessed:
+            <span id="alreadyChosen"></span>
+    </h2>
+
     <h2>Hint:
             <span id="gameHint"></span>
     </h2>
@@ -69,6 +73,9 @@ body {
     var guessesLeft = document.getElementById('guessLeft');
     var question = document.getElementById('question');
     var gameStatus = document.getElementById('status');
+    var chosen = document.getElementById('alreadyChosen');
+    
+
     var remGuess = 7;
     var toCompare = [];
     var alreadyGuessed = [];
@@ -123,20 +130,20 @@ body {
             
              if (joinToCompare === joinLeftOver) {
                 var newElem = document.createElement('h1');
-                newElem.innerHTML = 'YOU WIN!!!!!!!!';
+                newElem.innerHTML = 'YOU WIN!!!!!!!! New Game In 3 Seconds';
                 gameStatus.append(newElem);
-                console.log('YOU WIN!!!!!!');
-                setTimeout(function(){ location.reload(); }, 2000);
+                console.log('YOU WIN!!!!!! New Game In 3 Seconds');
+                setTimeout(function(){ location.reload(); }, 3000);
                 
             } else if (remGuess == 0) {
                 remGuess--
                 guessesLeft.innerHTML = 0
                 var newEle = document.createElement('h1');
-                newEle.innerHTML = 'YOU LOSE. Game Over!';
+                newEle.innerHTML = 'YOU LOSE. Game Over! New Game In 3 Seconds';
                 gameStatus.append(newEle);
-                console.log("YOU LOSE. Game Over!");
+                console.log("YOU LOSE. Game Over! New Game In 3 Seconds");
             
-                setTimeout(function(){ location.reload(); }, 2000);
+                setTimeout(function(){ location.reload(); }, 3000);
             }
         }
 
@@ -148,7 +155,7 @@ body {
             console.log("Rem Guess: " + remGuess)
             console.log(leftOver);
 
-        
+            var chosenLetter = document.createElement('span');
             var answer = event.key;
             var answered = answer.toLowerCase();
             var grabGuess = document.getElementsByClassName('guess');
@@ -177,11 +184,19 @@ body {
                     }
                 } else if (guessedAlready == true) {
                     console.log('Already Guessed')
+                    var newEleme = document.createElement('h1');
+                    newEleme.innerHTML = 'You Guessed That Already. Try Again!';
+                    gameStatus.append(newEleme);
+                    setTimeout(function(){ 
+                        newEleme.remove()
+                    }, 3000);
                     winOrLose()
                 } else if(doesInclude == false) {
                     remGuess--
                     guessesLeft.innerHTML = remGuess
                     alreadyGuessed.push(answered)
+                    chosenLetter.innerHTML = "    " + answered;
+                    chosen.append(chosenLetter);
                     console.log('Guesses Left: ' + remGuess)
                     console.log('Incorrect')
                     winOrLose()
@@ -191,6 +206,7 @@ body {
 
     wordGen()
     guessMe()
+
 
 
 // console.log(joinToCompare);
